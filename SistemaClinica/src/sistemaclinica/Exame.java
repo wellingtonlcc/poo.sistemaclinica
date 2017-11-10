@@ -38,6 +38,9 @@ public class Exame {
    public void adicionaPaciente(Paciente paci){
        this.pacientes.add(paci);
    }
+   public void setTipoExame(String tipoExame){
+	   this.tipoExame = tipoExame;
+   }
    public String getTipoExame(){
        return tipoExame;
    }
