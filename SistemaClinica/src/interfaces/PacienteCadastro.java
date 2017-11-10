@@ -1,8 +1,5 @@
 package interfaces;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -12,7 +9,6 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.awt.event.ActionEvent;
@@ -23,39 +19,40 @@ import javax.swing.ImageIcon;
 import sistemaclinica.Arquivo;
 import sistemaclinica.Endereco;
 import sistemaclinica.Paciente;
-import sistemaclinica.PacienteCadastradoException;
+import sistemaclinica.PacienteJaCadastradoException;
 import sistemaclinica.SistemaList;
+
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
 
 public class PacienteCadastro extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField txtNome;
 	private JTextField txtRg;
-	private JTextField txtSexo;
 	private JTextField txtData;
 	private JTextField txtRua;
 	private JTextField txtTelefone;
 	private JTextField txtN;
-	private JTextField txtEstado;
 	private JTextField txtCidade;
 	
 	private Arquivo arq;
 	private static SistemaList agendamento = new SistemaList();
-	private static Menu menu = new Menu();
-
-	public PacienteCadastro() {
-		
+	
+	public PacienteCadastro() {	
 		arq = new Arquivo();
 		List<Paciente> listaPar = new ArrayList<Paciente>();
 		listaPar = arq.recuperaPaciente();
 		for(Paciente p: listaPar){
 			try{
 				agendamento.addPaciente(p);
-			}catch(PacienteCadastradoException err){
+			}catch(PacienteJaCadastradoException err){
 			}
-			
 		}
-		
 		setResizable(false);
 		setTitle("Cadastro");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -92,13 +89,8 @@ public class PacienteCadastro extends JFrame {
 
 		JLabel lblSexo = new JLabel("SEXO");
 		lblSexo.setFont(new Font("Tahoma", Font.BOLD, 13));
-		lblSexo.setBounds(174, 67, 38, 14);
+		lblSexo.setBounds(184, 67, 38, 14);
 		contentPane.add(lblSexo);
-
-		txtSexo = new JTextField();
-		txtSexo.setBounds(217, 64, 86, 20);
-		contentPane.add(txtSexo);
-		txtSexo.setColumns(10);
 
 		JLabel lblDataNasc = new JLabel("DATA NASC.");
 		lblDataNasc.setFont(new Font("Tahoma", Font.BOLD, 13));
@@ -142,27 +134,37 @@ public class PacienteCadastro extends JFrame {
 
 		JLabel lblEstado = new JLabel("ESTADO");
 		lblEstado.setFont(new Font("Tahoma", Font.BOLD, 13));
-		lblEstado.setBounds(313, 144, 64, 14);
+		lblEstado.setBounds(310, 149, 56, 14);
 		contentPane.add(lblEstado);
-
-		txtEstado = new JTextField();
-		txtEstado.setBounds(376, 142, 35, 20);
-		contentPane.add(txtEstado);
-		txtEstado.setColumns(10);
 		
 		txtCidade = new JTextField();
 		txtCidade.setBounds(70, 143, 233, 20);
 		contentPane.add(txtCidade);
 		txtCidade.setColumns(10);
 
+		JComboBox<Object> CBEstado = new JComboBox<Object>();
+		CBEstado.setModel(new DefaultComboBoxModel<Object>(new String[] {"", "AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN", "RS", "RO", "RR", "SC", "SP", "SE", "TO"}));
+		CBEstado.setBounds(364, 142, 48, 25);
+		contentPane.add(CBEstado);
+		
+		JComboBox<Object> CBSexo = new JComboBox<Object>();
+		CBSexo.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		CBSexo.setModel(new DefaultComboBoxModel<Object>(new String[] {"", "FEMININO", "MASCULINO"}));
+		CBSexo.setBounds(232, 61, 71, 25);
+		contentPane.add(CBSexo);
+		
+		
 		JButton btnCadastrar = new JButton("CADASTRAR");
 		btnCadastrar.setFont(new Font("Tahoma", Font.BOLD, 11));
 		btnCadastrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				String estado = (String) CBEstado.getSelectedItem();
+				String sexo = (String) CBSexo.getSelectedItem();
+				
 				Endereco end = new Endereco();
 				end.setRua(txtRua.getText().toUpperCase());
 				end.setNumero(txtN.getText().toUpperCase());
-				end.setEstado(txtEstado.getText().toUpperCase());
+				end.setEstado(estado);
 				end.setCidade(txtCidade.getText().toUpperCase());
 
 				Paciente p = new Paciente();
@@ -170,16 +172,15 @@ public class PacienteCadastro extends JFrame {
 				p.setRg(txtRg.getText().toUpperCase());
 				p.setDataNascimento(txtData.getText().toUpperCase());
 				p.setTelefone(txtTelefone.getText().toUpperCase());
-				p.setSexo(txtSexo.getText().toUpperCase());
+				p.setSexo(sexo);
 				p.setEndereco(end);
 
 				try {
 					agendamento.addPaciente(p);
-					//arq.write(p.getNome()+".txt", p.toString());
 					arq.gravaPaciente(agendamento.getListaPaciente());
 					JOptionPane.showMessageDialog(null, "Paciente cadastrado");
 					
-				} catch (PacienteCadastradoException err) {
+				} catch (PacienteJaCadastradoException err) {
 					JOptionPane.showMessageDialog(null, err.getMessage());
 				}
 
@@ -187,17 +188,15 @@ public class PacienteCadastro extends JFrame {
 				txtRg.setText("");
 				txtData.setText("");
 				txtTelefone.setText("");
-				txtSexo.setText("");
 				txtRua.setText("");
 				txtN.setText("");
-				txtEstado.setText("");
 				txtCidade.setText("");
-				
+				CBEstado.setSelectedIndex(0);
+				CBSexo.setSelectedIndex(0);
 				dispose();
-
 			}
 		});
-		btnCadastrar.setBounds(421, 107, 106, 55);
+		btnCadastrar.setBounds(422, 136, 106, 34);
 		contentPane.add(btnCadastrar);
 
 		JLabel lblcidade = new JLabel("Cidade");
@@ -209,5 +208,9 @@ public class PacienteCadastro extends JFrame {
 		label.setIcon(new ImageIcon(PacienteCadastro.class.getResource("/imagens/logo.png")));
 		label.setBounds(209, 174, 94, 68);
 		contentPane.add(label);
+		
+		
+		
+		
 	}
 }

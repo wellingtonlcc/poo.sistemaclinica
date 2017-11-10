@@ -14,14 +14,13 @@ import sistemaclinica.Exame;
 import sistemaclinica.ExameJaCadastradoException;
 import sistemaclinica.ExameNaoCadastradoException;
 import sistemaclinica.Paciente;
-import sistemaclinica.PacienteCadastradoException;
+import sistemaclinica.PacienteJaCadastradoException;
 import sistemaclinica.PacienteNaoCadastradoException;
 import sistemaclinica.SistemaList;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
-
 
 public class CadAgendamento extends JFrame {
 
@@ -32,6 +31,7 @@ public class CadAgendamento extends JFrame {
 	private static SistemaList agenda = new SistemaList();
 
 	public CadAgendamento() {
+		setResizable(false);
 		
 		arq = new Arquivo();
 		List<Exame> listaExa = new ArrayList<Exame>();
@@ -48,7 +48,7 @@ public class CadAgendamento extends JFrame {
 		for(Paciente p: listaPar){
 			try{
 				agenda.addPaciente(p);
-			}catch(PacienteCadastradoException err){
+			}catch(PacienteJaCadastradoException err){
 			}
 		}
 		
@@ -67,7 +67,8 @@ public class CadAgendamento extends JFrame {
 				try{
 					String titulos = "";
 					for(Exame e: agenda.getListaExame()){
-						titulos += e.getTipoExame()+"\n";
+						titulos += e.getTipoExame()+"       data: "+e.getDataExame()+"\n";
+			
 					}
 					String titulo = JOptionPane.showInputDialog("              Exames Disponiveis: \n"+titulos+"\n");
 					titulo = titulo.toUpperCase();
@@ -98,15 +99,12 @@ public class CadAgendamento extends JFrame {
 					String titulo = JOptionPane.showInputDialog("             Digite o exame: \n"+titulos+"\n").toUpperCase();
 					for(Exame e: agenda.getListaExame()){
 						if(e.getTipoExame().equals(titulo)){
-							JOptionPane.showMessageDialog(null,e.getSemana()+" ++ "+e.getPeriodo()+" \n"+e.getDataExame()+"\n"+e.toNomes(),"+  "+e.getTipoExame()+"  +",1);
+							JOptionPane.showMessageDialog(null,e.getSemana()+" ++ "+e.getPeriodo()+"\n"+"         "+e.getDataExame()+"\n"+e.toNomes(),"+  "+e.getTipoExame()+"  +",1);
 						}
 					}	
 				}else{
 					JOptionPane.showMessageDialog(null, "Agenda está vazia");
-				}
-					
-				
-				
+				}	
 			}
 		});
 		btnListar.setFont(new Font("Microsoft Sans Serif", Font.PLAIN, 22));

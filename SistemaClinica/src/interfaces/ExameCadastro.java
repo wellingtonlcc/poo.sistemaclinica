@@ -10,19 +10,21 @@ import java.awt.Font;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JButton;
+
 import sistemaclinica.Arquivo;
 import sistemaclinica.Exame;
 import sistemaclinica.ExameJaCadastradoException;
 import sistemaclinica.SistemaList;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 
 public class ExameCadastro extends JFrame {
-
 	/**
 	 * 
 	 */
@@ -32,10 +34,11 @@ public class ExameCadastro extends JFrame {
 	
 	private Arquivo arq;
 	private SistemaList agendamento = new SistemaList();
-	private static Menu menu = new Menu();
+
 	private JTextField txtData;
 
 	public ExameCadastro() {
+		setResizable(false);
 		
 		arq = new Arquivo();
 		List<Exame> listaExa = new ArrayList<Exame>();
@@ -46,8 +49,6 @@ public class ExameCadastro extends JFrame {
 			}catch(ExameJaCadastradoException err){	
 			}
 		}
-		
-		
 		setTitle("Exame");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 257);
@@ -76,12 +77,12 @@ public class ExameCadastro extends JFrame {
 		lblPerodoDisponvel.setBounds(246, 78, 137, 25);
 		contentPane.add(lblPerodoDisponvel);
 		
-		JComboBox CBPeriodo = new JComboBox();
-		CBPeriodo.setModel(new DefaultComboBoxModel(new String[] {"<Selecione>", "Manh\u00E3", "Tarde"}));
+		JComboBox<Object> CBPeriodo = new JComboBox<Object>();
+		CBPeriodo.setModel(new DefaultComboBoxModel<Object>(new String[] {"<Selecione>", "Manh\u00E3", "Tarde"}));
 		CBPeriodo.setBounds(256, 99, 105, 20);
 		contentPane.add(CBPeriodo);
 		
-		JComboBox CBSemana = new JComboBox();
+		JComboBox<Object> CBSemana = new JComboBox<Object>();
 		CBSemana.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -104,7 +105,7 @@ public class ExameCadastro extends JFrame {
 		contentPane.add(txtData);
 		
 		
-		CBSemana.setModel(new DefaultComboBoxModel(new String[] {"<Selecione>", "Segunda", "Ter\u00E7a", "Quarta", "Quinta", "Sexta"}));
+		CBSemana.setModel(new DefaultComboBoxModel<Object>(new String[] {"<Selecione>", "Segunda", "Ter\u00E7a", "Quarta", "Quinta", "Sexta"}));
 		CBSemana.setBounds(38, 99, 105, 20);
 		contentPane.add(CBSemana);
 		
@@ -130,12 +131,5 @@ public class ExameCadastro extends JFrame {
 		});
 		btnOk.setBounds(170, 185, 89, 23);
 		contentPane.add(btnOk);
-		
-		
-		
-		
-		
-		
-	
 	}
 }

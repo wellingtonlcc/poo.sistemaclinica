@@ -1,6 +1,5 @@
 package interfaces;
 
-
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -11,7 +10,6 @@ import java.awt.Font;
 import javax.swing.ImageIcon;
 
 public class About extends JFrame {
-
 	/**
 	 * 
 	 */
@@ -38,6 +36,7 @@ public class About extends JFrame {
 	 * Create the frame.
 	 */
 	public About() {
+		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
